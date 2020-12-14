@@ -1,14 +1,18 @@
 import React, { forwardRef } from "react";
 import "./Post.css";
-import { Avatar } from "@material-ui/core";
+import { Avatar, Button } from "@material-ui/core";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
-import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
-import RepeatIcon from "@material-ui/icons/Repeat";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import PublishIcon from "@material-ui/icons/Publish";
+
+import db from "./firebase";
+
+const favoritPlus = (e, id, favoritCount) => {
+  e.preventDefault();
+  db.collection('posts').doc(id).update({ favoritCount: favoritCount += 1 })
+};
 
 const Post = forwardRef(
-  ({ displayName, username, verified, text, image, avatar }, ref) => {
+  ({ id, displayName, username, verified, favoritCount, text, image, avatar }, ref) => {
     return (
       <div className="post" ref={ref}>
         <div className="post__avatar">
@@ -31,10 +35,15 @@ const Post = forwardRef(
           </div>
           <img src={image} alt="" />
           <div className="post__footer">
-            <ChatBubbleOutlineIcon fontSize="small" />
-            <RepeatIcon fontSize="small" />
-            <FavoriteBorderIcon fontSize="small" />
-            <PublishIcon fontSize="small" />
+            {/* <ChatBubbleOutlineIcon fontSize="small" />
+            <RepeatIcon fontSize="small" /> */}
+            <Button
+              onClick={(e) => favoritPlus(e, id, favoritCount)}
+              type="submit"
+            >
+              {favoritCount}<FavoriteBorderIcon fontSize="small" />
+            </Button>
+            {/* <PublishIcon fontSize="small" /> */}
           </div>
         </div>
       </div>
